@@ -26,9 +26,6 @@ function refreshSendBtn() {
     sendBtn.disabled  = !ready;
 }
 
-/* ──────────────────────────────────────────────
-   HTML escape — keeps user text safe from XSS
-────────────────────────────────────────────── */
 function esc(s) {
     return String(s)
         .replace(/&/g, '&amp;')
@@ -36,10 +33,6 @@ function esc(s) {
         .replace(/>/g, '&gt;');
 }
 
-/* ──────────────────────────────────────────────
-   Inline markdown: bold, italic, inline code
-   Runs AFTER HTML escaping so & < > are safe
-────────────────────────────────────────────── */
 function inline(text) {
     return text
         .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
@@ -48,25 +41,18 @@ function inline(text) {
         .replace(/`([^`]+)`/g,         '<code>$1</code>');
 }
 
-/* ──────────────────────────────────────────────
-   Full markdown renderer
-   Handles: fenced code blocks, headings,
-   lists, bold/italic/inline-code, hr, paragraphs
-────────────────────────────────────────────── */
+
 function renderMarkdown(raw) {
     let text = raw.replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n');
 
-    // Step 1 — extract fenced code blocks (protect their contents)
     const blocks = [];
     text = text.replace(/```(\w*)\n?([\s\S]*?)```/g, function(_, lang, code) {
         blocks.push({ lang: lang, code: esc(code.trimEnd()) });
         return '\u0001B' + (blocks.length - 1) + '\u0001';
     });
 
-    // Step 2 — HTML-escape everything outside code blocks
     text = esc(text);
 
-    // Step 3 — process line by line
     const out = [];
     let inUl = false, inOl = false;
 
@@ -107,18 +93,13 @@ function renderMarkdown(raw) {
     }
     closeList();
 
-    // Step 4 — restore code blocks
     return out.join('').replace(/\u0001B(\d+)\u0001/g, function(_, idx) {
         var b = blocks[+idx];
         return '<pre><code>' + b.code + '</code></pre>';
     });
 }
 
-/* ──────────────────────────────────────────────
-   Add a message bubble to the conversation
-────────────────────────────────────────────── */
 function addMessage(role, text) {
-    // First ever message: collapse header, enter full-screen chat layout
     if (!chatStarted) {
         chatStarted = true;
         pageHeader.classList.add('hidden');
@@ -140,16 +121,12 @@ function addMessage(role, text) {
 
     messages.appendChild(row);
 
-    // Force reflow so browser sees opacity:0, then transition to 1
     row.getBoundingClientRect();
     requestAnimationFrame(function() { row.classList.remove('msg-enter'); });
 
     messages.scrollTop = messages.scrollHeight;
 }
 
-/* ──────────────────────────────────────────────
-   Send a message to the AI
-────────────────────────────────────────────── */
 async function sendMessage() {
     var text = chatInput.value.trim();
     if (!text || isTyping) return;

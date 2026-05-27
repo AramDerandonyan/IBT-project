@@ -1,7 +1,3 @@
-# Requested exclusions
 README.md
 .env
 .env.*
-
-# OS file
-.DS_Store
