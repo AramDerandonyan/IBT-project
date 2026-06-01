@@ -1,5 +1,4 @@
 <?php
-// ── Load .env ──────────────────────────────────────────────────────────────
 $envFile = __DIR__ . '/../.env';
 if (file_exists($envFile)) {
     foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
@@ -9,7 +8,6 @@ if (file_exists($envFile)) {
     }
 }
 
-// ── Site-wide configuration ────────────────────────────────────────────────
 define('SITE_NAME', $_ENV['SITE_NAME'] ?? 'IBT Project');
 define('STUDENT_NAME', $_ENV['STUDENT_NAME'] ?? 'Aram Stepan Derandonyan');
 define('STUDENT_SPECIALTY', $_ENV['STUDENT_SPECIALTY'] ?? 'ISN');

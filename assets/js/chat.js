@@ -13,13 +13,13 @@ const pageWrapper   = document.querySelector('.page-wrapper');
 let isTyping    = false;
 let chatStarted = false;
 
-/* ── Textarea auto-resize ── */
+/* Textarea auto-resize */
 function adjustHeight() {
     chatInput.style.height = '60px';
     chatInput.style.height = Math.min(chatInput.scrollHeight, 200) + 'px';
 }
 
-/* ── Send button ready/idle state ── */
+/* Send button ready/idle state */
 function refreshSendBtn() {
     const ready = chatInput.value.trim().length > 0 && !isTyping;
     sendBtn.className = 'send-btn ' + (ready ? 'ready' : 'idle');
